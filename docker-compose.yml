@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: isft188_modular_web
+    restart: always
+    stdin_open: true  # Soporte para consola interactiva
+    tty: true         # Asignación de pseudo-TTY interactivo
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - DEBUG=${DEBUG:-False}
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_ENGINE=${DB_ENGINE:-postgresql}
+      - DB_NAME=${DB_NAME:-sga_db}
+      - DB_USER=${DB_USER:-sga_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SEED_DEMO_DATA=${SEED_DEMO_DATA:-False}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin1234}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+
+  db:
+    image: postgres:16-alpine
+    container_name: isft188_modular_postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME:-sga_db}
+      - POSTGRES_USER=${DB_USER:-sga_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+

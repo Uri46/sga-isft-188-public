@@ -1,0 +1,61 @@
+# Archivos de Entorno y Claves Secretas
+.env
+.env.local
+.env.*.local
+*.env
+
+# Base de Datos Local SQLite y respaldos
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.db
+*.sql
+*.dump
+
+# Archivos de datos, planillas y documentos locales
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.ods
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
+
+# Entornos Virtuales y Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+ENV/
+.env/
+
+# Archivos Estáticos y Medios locales
+staticfiles/
+media/
+*.log
+
+# Dependencias Frontend
+node_modules/
+.npm/
+
+# Archivos de IDE y Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Carpetas de documentación interna o borradores
+docs_internas/
+documentacion/
+Documentación*/
+Bitacora*/
+Recursos/
+excels/

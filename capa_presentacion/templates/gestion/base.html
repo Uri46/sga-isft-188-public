@@ -1,0 +1,543 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="es" id="htmlTag">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% block title %}ISFT 188 - Buscador de Estudiantes{% endblock %}</title>
+
+    <!-- Inicializacion de Tema -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('isft188_theme') || 'dark';
+                if (savedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                } else {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    
+    <!-- Favicon Oficial ISFT 188 -->
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
+
+    <!-- Estilos Locales Offline-First -->
+    <link rel="stylesheet" href="{% static 'css/app.css' %}"/>
+
+    <!-- Tailwind CSS Compilado Oficial para Producción (Zero advertencias, ultra liviano y 100% offline) -->
+    <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}"/>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet"/>
+    
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        /* Variables de Tema Oscuro */
+        html.dark {
+            --bg-body: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --card-inner-bg: rgba(15, 23, 42, 0.6);
+            --card-inner-border: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(15, 23, 42, 0.8);
+            --input-border: rgba(255, 255, 255, 0.18);
+            --input-text: #f8fafc;
+            --option-bg: #1e293b;
+            --option-text: #f8fafc;
+            --header-bg: rgba(15, 23, 42, 0.95);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --modal-bg: #0f172a;
+            --modal-card-bg: rgba(30, 41, 59, 0.7);
+            --modal-card-border: rgba(255, 255, 255, 0.12);
+            --dropdown-bg: #0f172a;
+            --dropdown-border: rgba(255, 255, 255, 0.15);
+            --dropdown-text: #e2e8f0;
+            --dropdown-hover: rgba(255, 255, 255, 0.08);
+            --table-header-bg: rgba(15, 23, 42, 0.6);
+            --table-row-hover: rgba(99, 102, 241, 0.08);
+            --table-border: rgba(255, 255, 255, 0.08);
+            --stat-card-bg: rgba(30, 41, 59, 0.7);
+            --stat-card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Variables de Tema Claro (Suave, descansado para la vista, sin encandilar) */
+        html.light {
+            --bg-body: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --glass-bg: rgba(248, 250, 252, 0.94);
+            --glass-border: rgba(148, 163, 184, 0.35);
+            --card-inner-bg: rgba(226, 232, 240, 0.75);
+            --card-inner-border: rgba(148, 163, 184, 0.28);
+            --input-bg: #f8fafc;
+            --input-border: #cbd5e1;
+            --input-text: #0f172a;
+            --option-bg: #f8fafc;
+            --option-text: #0f172a;
+            --header-bg: rgba(241, 245, 249, 0.96);
+            --header-border: rgba(148, 163, 184, 0.35);
+            --modal-bg: #f1f5f9;
+            --modal-card-bg: #e2e8f0;
+            --modal-card-border: #cbd5e1;
+            --dropdown-bg: #f8fafc;
+            --dropdown-border: rgba(148, 163, 184, 0.35);
+            --dropdown-text: #1e293b;
+            --dropdown-hover: rgba(99, 102, 241, 0.1);
+            --table-header-bg: #cbd5e1;
+            --table-row-hover: rgba(99, 102, 241, 0.08);
+            --table-border: rgba(148, 163, 184, 0.3);
+            --stat-card-bg: rgba(248, 250, 252, 0.92);
+            --stat-card-border: rgba(148, 163, 184, 0.35);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body) !important;
+            color: var(--text-main) !important;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .glass-card {
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: var(--text-main) !important;
+            backdrop-filter: blur(16px);
+        }
+
+        .glass-dropdown {
+            background: var(--dropdown-bg) !important;
+            border: 1px solid var(--dropdown-border) !important;
+            color: var(--dropdown-text) !important;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .dropdown-item {
+            color: var(--dropdown-text) !important;
+        }
+        .dropdown-item:hover {
+            background: var(--dropdown-hover) !important;
+        }
+
+        input[type="text"], input[type="search"], input[type="password"], input[type="email"], input[type="date"], input[type="number"], select {
+            color: var(--input-text) !important;
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--input-border) !important;
+            transition: all 0.2s ease;
+        }
+
+        html.dark input[type="date"] {
+            color-scheme: dark !important;
+        }
+
+        html.light input[type="date"] {
+            color-scheme: light !important;
+        }
+
+        html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: brightness(0) invert(1) !important;
+            cursor: pointer;
+            opacity: 0.95 !important;
+        }
+        input[type="text"]::placeholder,
+        input[type="search"]::placeholder,
+        input[type="password"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="number"]::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.8;
+        }
+
+        input[type="text"]:focus,
+        input[type="search"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+            outline: none;
+        }
+
+        select option {
+            background-color: var(--option-bg) !important;
+            color: var(--option-text) !important;
+            padding: 10px;
+        }
+
+        .glass-modal {
+            background: var(--modal-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: var(--text-main) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .theme-text-main {
+            color: var(--text-main) !important;
+        }
+
+        .theme-text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .theme-border {
+            border-color: var(--glass-border) !important;
+        }
+
+        .theme-table-header {
+            background-color: var(--table-header-bg) !important;
+            color: var(--text-muted) !important;
+        }
+
+        .theme-table-row {
+            border-color: var(--table-border) !important;
+            transition: background-color 0.15s ease;
+        }
+
+        .theme-table-row:hover {
+            background-color: var(--table-row-hover) !important;
+        }
+
+        .theme-table-divide > :not([hidden]) ~ :not([hidden]) {
+            border-color: var(--table-border) !important;
+        }
+
+        .logo-circular {
+            border-radius: 9999px;
+            object-fit: cover;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            border: 2.5px solid rgba(99, 102, 241, 0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .logo-circular:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.6);
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .step-bubble {
+            width: 28px;
+            height: 28px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            transition: all 0.2s ease;
+        }
+
+        .step-bubble.active {
+            background: #6366f1;
+            color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+        }
+
+        .step-bubble.completed {
+            background: #059669;
+            color: #ffffff;
+        }
+
+        .step-bubble.pending {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--text-muted);
+        }
+
+        .alert-error-card {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(190, 18, 60, 0.05) 100%);
+            border: 1.5px solid rgba(244, 63, 94, 0.4);
+            box-shadow: 0 10px 30px -5px rgba(244, 63, 94, 0.18);
+        }
+
+        html.light .alert-error-card {
+            background: linear-gradient(135deg, rgba(254, 242, 242, 0.95) 0%, rgba(255, 228, 230, 0.85) 100%);
+            border: 1.5px solid rgba(244, 63, 94, 0.45);
+            box-shadow: 0 8px 20px -3px rgba(244, 63, 94, 0.12);
+        }
+
+        .error-tag-pill {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            color: #fb7185;
+        }
+
+        html.light .error-tag-pill {
+            background: rgba(254, 226, 226, 0.9);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            color: #e11d48;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <!-- Navbar / Encabezado Principal -->
+    <header class="w-full border-b px-4 md:px-8 py-4 flex items-center justify-between" style="background: var(--header-bg); border-color: var(--header-border);">
+        <div class="flex items-center gap-4">
+            <!-- Logo Circular Oficial -->
+            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex items-center justify-center shrink-0">
+                <img id="logoDark" src="{% static 'img/logo_dark.svg' %}" alt="SGA" class="w-full h-full logo-circular">
+                <img id="logoLight" src="{% static 'img/logo_light.svg' %}" alt="SGA" class="w-full h-full logo-circular hidden">
+            </div>
+            <div>
+                <span class="text-xs md:text-sm uppercase tracking-wider text-indigo-500 font-bold block">Instituto Superior de Formación Técnica N° 188</span>
+                <h1 class="text-lg md:text-2xl font-black leading-tight theme-text-main">Sistema de Gestión Académica</h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+            <!-- Conmutador de Tema Claro / Oscuro -->
+            <button 
+                id="themeToggleBtn"
+                onclick="toggleTheme()" 
+                class="h-9 w-[136px] min-w-[136px] shrink-0 inline-flex items-center justify-center gap-2 px-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-500 hover:text-indigo-400 transition-colors cursor-pointer shadow-sm whitespace-nowrap"
+                title="Cambiar Modo Claro / Oscuro"
+            >
+                <span class="material-symbols-outlined text-base" id="themeIcon">dark_mode</span>
+                <span id="themeText">Modo Oscuro</span>
+            </button>
+
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_staff or request.user.is_superuser %}
+                <!-- Acceso a Docentes (Directivos) -->
+                <a 
+                    href="{% url 'gestion:docentes' %}"
+                    class="h-9 shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 text-xs font-bold text-violet-500 hover:text-violet-400 transition-colors cursor-pointer shadow-sm"
+                    title="Módulo de Búsqueda y Consulta de Docentes"
+                >
+                    <span class="material-symbols-outlined text-base">school</span>
+                    <span class="hidden md:inline">Docentes</span>
+                </a>
+
+                <!-- Acceso a Carreras (Directivos) -->
+                <a 
+                    href="{% url 'carreras:carreras_list' %}"
+                    class="h-9 shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors cursor-pointer shadow-sm"
+                    title="Módulo de Carreras y Planes de Estudio"
+                >
+                    <span class="material-symbols-outlined text-base">auto_stories</span>
+                    <span class="hidden md:inline">Carreras</span>
+                </a>
+
+                <!-- Acceso a Alumnos (Directivos) -->
+                <a 
+                    href="{% url 'gestion:buscador' %}"
+                    class="h-9 shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-500 hover:text-indigo-400 transition-colors cursor-pointer shadow-sm"
+                    title="Buscador y Nómina de Alumnos"
+                >
+                    <span class="material-symbols-outlined text-base">groups</span>
+                    <span class="hidden md:inline">Alumnos</span>
+                </a>
+                <!-- Distintivo de Directivo -->
+                <div class="h-9 shrink-0 hidden md:inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-500">
+                    <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                    <span>Directivo: {{ request.user.username }}</span>
+                </div>
+                {% else %}
+                <!-- Distintivo y Enlace a Portal Personal Alumno / Docente -->
+                <div class="h-9 shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-400">
+                    <span class="material-symbols-outlined text-sm">badge</span>
+                    <span>DNI {{ request.user.username }}</span>
+                </div>
+                {% endif %}
+
+            <!-- Boton Cerrar Sesion -->
+            <a 
+                href="{% url 'login:logout' %}" 
+                class="h-9 shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-bold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer shadow-sm"
+                title="Cerrar Sesión"
+            >
+                <span class="material-symbols-outlined text-base">logout</span>
+                <span class="hidden sm:inline">Cerrar Sesión</span>
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 p-4 md:p-6 max-w-[1440px] w-full mx-auto">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Pantalla de Carga Global Amigable (Accesible y no técnica) -->
+    <div id="globalLoadingOverlay" class="fixed inset-0 z-[99999] hidden flex items-center justify-center p-4 bg-black/75 backdrop-blur-md transition-opacity duration-200" style="opacity: 0;">
+        <div class="glass-modal w-full max-w-sm rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-2xl border theme-border transform scale-95 transition-transform duration-200" style="background: var(--modal-bg);">
+            <!-- Icono animado con escudo/pulso -->
+            <div class="relative w-16 h-16 mx-auto flex items-center justify-center">
+                <div class="absolute inset-0 rounded-2xl bg-indigo-500/20 animate-ping"></div>
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-xl shadow-indigo-500/30">
+                    <span class="material-symbols-outlined text-3xl" id="globalLoadingIcon">school</span>
+                </div>
+            </div>
+
+            <!-- Textos amigables no técnicos -->
+            <div class="space-y-1.5">
+                <h3 class="text-base sm:text-lg font-black theme-text-main" id="globalLoadingTitle">
+                    Cargando información...
+                </h3>
+                <p class="text-xs theme-text-muted leading-relaxed max-w-xs mx-auto" id="globalLoadingMessage">
+                    Estamos preparando los datos para mostrártelos. Aguardá unos instantes...
+                </p>
+            </div>
+
+            <!-- Barra/indicador de progreso visual -->
+            <div class="flex items-center justify-center gap-2 text-xs font-bold text-indigo-500 pt-1">
+                <div class="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                <span id="globalLoadingStatus">Procesando...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de Pagina -->
+    <footer class="border-t py-4 px-8 text-center text-xs theme-text-muted" style="border-color: var(--header-border); background: var(--card-inner-bg);">
+        ISFT N° 188 — General Rodríguez
+    </footer>
+
+    <script>
+        function applyTheme(theme) {
+            const htmlTag = document.getElementById('htmlTag');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            const logoDark = document.getElementById('logoDark');
+            const logoLight = document.getElementById('logoLight');
+
+            if (theme === 'light') {
+                htmlTag.classList.remove('dark');
+                htmlTag.classList.add('light');
+                if (themeIcon) themeIcon.innerText = 'light_mode';
+                if (themeText) themeText.innerText = 'Modo Claro';
+                if (logoDark) logoDark.classList.add('hidden');
+                if (logoLight) logoLight.classList.remove('hidden');
+            } else {
+                htmlTag.classList.remove('light');
+                htmlTag.classList.add('dark');
+                if (themeIcon) themeIcon.innerText = 'dark_mode';
+                if (themeText) themeText.innerText = 'Modo Oscuro';
+                if (logoDark) logoDark.classList.remove('hidden');
+                if (logoLight) logoLight.classList.add('hidden');
+            }
+            try {
+                localStorage.setItem('isft188_theme', theme);
+            } catch (e) {}
+        }
+
+        function toggleTheme() {
+            const currentTheme = (document.documentElement.classList.contains('light')) ? 'light' : 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        }
+
+        // Helpers de Pantalla de Carga Global
+        window.mostrarCargando = function(titulo, mensaje, status) {
+            const overlay = document.getElementById('globalLoadingOverlay');
+            if (!overlay) return;
+            if (titulo) document.getElementById('globalLoadingTitle').innerText = titulo;
+            if (mensaje) document.getElementById('globalLoadingMessage').innerText = mensaje;
+            if (status) document.getElementById('globalLoadingStatus').innerText = status;
+            
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                const modal = overlay.querySelector('.glass-modal');
+                if (modal) modal.classList.remove('scale-95');
+            });
+        };
+
+        window.ocultarCargando = function() {
+            const overlay = document.getElementById('globalLoadingOverlay');
+            if (!overlay || overlay.classList.contains('hidden')) return;
+            overlay.style.opacity = '0';
+            const modal = overlay.querySelector('.glass-modal');
+            if (modal) modal.classList.add('scale-95');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                document.getElementById('globalLoadingTitle').innerText = 'Cargando información...';
+                document.getElementById('globalLoadingMessage').innerText = 'Estamos preparando los datos para mostrártelos. Aguardá unos instantes...';
+                document.getElementById('globalLoadingStatus').innerText = 'Procesando...';
+            }, 200);
+        };
+
+        // Auto-ocultar al restaurar desde caché del navegador (botón atrás/adelante)
+        window.addEventListener('pageshow', () => {
+            if (typeof window.ocultarCargando === 'function') {
+                window.ocultarCargando();
+            }
+        });
+
+        // Interceptar envíos de formularios tradicionales para mostrar feedback visual
+        document.addEventListener('submit', function(e) {
+            // Ignorar si el evento ya fue cancelado (e.g. AJAX con e.preventDefault())
+            if (e.defaultPrevented) {
+                return;
+            }
+
+            const target = e.target;
+            if (!target) return;
+
+            // Ignorar formularios AJAX o modales internos
+            if (
+                target.dataset && target.dataset.ajax === 'true' ||
+                target.id && (target.id.includes('Materia') || target.id.includes('Editar') || target.id.includes('Eliminar')) ||
+                target.getAttribute('onsubmit') && (
+                    target.getAttribute('onsubmit').includes('enviarExcelEstudiantes') ||
+                    target.getAttribute('onsubmit').includes('preventDefault') ||
+                    target.getAttribute('onsubmit').includes('guardar') ||
+                    target.getAttribute('onsubmit').includes('confirmar')
+                )
+            ) {
+                return;
+            }
+
+            window.mostrarCargando('Procesando solicitud...', 'Actualizando la información del sistema. Aguardá unos instantes...', 'Cargando...');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Siempre asegurar que cualquier overlay residual de carga quede oculto
+            if (typeof window.ocultarCargando === 'function') {
+                window.ocultarCargando();
+            }
+
+            const savedTheme = localStorage.getItem('isft188_theme') || 'dark';
+            applyTheme(savedTheme);
+
+            // Limpieza automática de queries en la barra de direcciones
+            if (window.location.search) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
