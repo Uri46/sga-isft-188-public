@@ -617,8 +617,8 @@ class BuscadorAlumnosTestCase(TestCase):
 
     def test_docentes_ui_formato_dni_y_colapsable(self):
         p = Persona.objects.create(
-            dni="38123456",
-            cuil="20381234567",
+            dni="12345678",
+            cuil="20123456786",
             nombre="Martín",
             apellido="Gómez",
             identidad="M",
@@ -629,7 +629,7 @@ class BuscadorAlumnosTestCase(TestCase):
 
         res = self.client.get(reverse('gestion:docentes'))
         self.assertEqual(res.status_code, 200)
-        self.assertContains(res, "38.123.456")
+        self.assertContains(res, "12.345.678")
         self.assertContains(res, "alternarResultadosDocentes")
         self.assertContains(res, "contenedorResultadosDocentes")
         self.assertContains(res, "modalExpedienteDocente")

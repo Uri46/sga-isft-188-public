@@ -42,8 +42,8 @@ class PersonaBaseForm(forms.ModelForm):
             'mail',
         ]
         widgets = {
-            'dni': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Ej. 38123456', 'autocomplete': 'off'}),
-            'cuil': forms.TextInput(attrs={'class': INPUT_CLASS + ' font-mono', 'placeholder': 'Ej. 20-38123456-7', 'autocomplete': 'off'}),
+            'dni': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Ej. 12345678', 'autocomplete': 'off'}),
+            'cuil': forms.TextInput(attrs={'class': INPUT_CLASS + ' font-mono', 'placeholder': 'Ej. 20-12345678-6', 'autocomplete': 'off'}),
             'nombre': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Nombres'}),
             'apellido': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Apellidos'}),
             'fecha_nacimiento': forms.DateInput(attrs={'class': INPUT_CLASS, 'type': 'date'}),

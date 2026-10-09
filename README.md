@@ -286,17 +286,29 @@ python manage.py test tests
 
 ## 8. Capturas de Pantalla
 
-[AGREGAR CAPTURA: Pantalla de inicio de sesión con selección de tema claro/oscuro]
+### Acceso al Sistema
+![Inicio de Sesión](docs/capturas/01-login.png)
+*Pantalla de inicio de sesión institucional con selector de tema visual (claro/oscuro).*
 
-[AGREGAR CAPTURA: Buscador general de alumnos y docentes con filtros]
+### Buscador de Estudiantes y Estado Académico
+![Buscador de Alumnos y Docentes](docs/capturas/02-buscador.png)
+*Buscador de estudiantes con filtros por carrera, año de cursada, género, nacionalidad y localidad.*
 
-[AGREGAR CAPTURA: Formulario interactivo de carga de alumnos en dos pasos]
+### Carga de Alumnos en Dos Pasos
+![Carga de Alumnos en Dos Pasos](docs/capturas/03-carga-alumno.png)
+*Formulario de alta de alumnos en dos pasos (ingreso de datos y confirmación en matriz).*
 
-[AGREGAR CAPTURA: Catálogo institucional de carreras y planes de estudio]
+### Catálogo de Carreras y Planes de Estudio
+![Catálogo de Carreras y Planes](docs/capturas/04-catalogo-planes.png)
+*Catálogo institucional de carreras técnicas, resoluciones ministeriales y planes de estudio.*
 
-[AGREGAR CAPTURA: Constancia analítica oficial de alumno en formato imprimible]
+### Constancia de Estado Académico Imprimible
+![Constancia Analítica Imprimible](docs/capturas/05-analitico.png)
+*Constancia de estado académico con datos de filiación, materias cursadas y espacios para firmas institucionales.*
 
-[AGREGAR CAPTURA: Portal de autogestión del estudiante]
+### Portal del Estudiante
+![Portal de Autogestión del Estudiante](docs/capturas/06-portal-estudiante.png)
+*Portal del estudiante con resumen de rendimiento académico, asistencias y opción de impresión de analítico.*
 
 ---
 

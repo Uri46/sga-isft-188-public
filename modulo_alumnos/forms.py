@@ -105,13 +105,13 @@ class AlumnoForm(forms.ModelForm):
         widgets = {
             'dni': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 rounded-2xl text-sm font-medium border theme-border transition-all shadow-sm',
-                'placeholder': 'Ej. 38.123.456',
+                'placeholder': 'Ej. 12.345.678',
                 'autocomplete': 'off',
                 'required': 'required',
             }),
             'cuil': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 rounded-2xl text-sm font-medium border theme-border transition-all shadow-sm font-mono',
-                'placeholder': 'Ej. 20-38123456-7',
+                'placeholder': 'Ej. 20-12345678-6',
                 'autocomplete': 'off',
                 'required': 'required',
             }),
